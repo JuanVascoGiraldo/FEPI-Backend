@@ -15,6 +15,10 @@ class DishRepository(ABC):
         pass
 
     @abstractmethod
+    async def get_ids_by_group(self, group: str) -> List[UUID]:
+        pass
+
+    @abstractmethod
     async def get_available_by_group(self, group: str) -> List[Dish]:
         pass
 

@@ -15,6 +15,10 @@ class OrderRepository(ABC):
         pass
 
     @abstractmethod
+    async def get_ids_by_group(self, group: str) -> List[UUID]:
+        pass
+
+    @abstractmethod
     async def get_by_table_id(self, table_id: UUID) -> List[Order]:
         pass
 

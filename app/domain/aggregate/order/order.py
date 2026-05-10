@@ -1,22 +1,24 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from uuid import UUID
 from decimal import Decimal
 from typing import List, Optional
-from datetime import datetime, timezone
+from datetime import datetime
 
 from .order_item import OrderItem
 from .order_status import OrderStatus
 from .order_item_status import OrderItemStatus
+from .payment import Payment
 
 
 class Order(BaseModel):
     id: UUID
-    group: str       # restaurant identifier — needed to scope queries per tenant
+    group: str
     table_id: UUID
-    waiter_id: Optional[UUID] = None  # assigned waiter; None if not yet assigned
-    items: List[OrderItem] = []
+    waiter_id: Optional[UUID] = None
+    items: List[OrderItem] = Field(default_factory=list)
+    payments: List[Payment] = Field(default_factory=list)
     status: OrderStatus = OrderStatus.OPEN
-    notes: Optional[str] = None  # general order notes from the waiter
+    notes: Optional[str] = None
     created_at: datetime
     updated_at: datetime
 
@@ -39,25 +41,25 @@ class Order(BaseModel):
             item.status = status
         self.updated_at = timestamp
 
+    # ── payment management ───────────────────────────────────────────────────
+
+    def add_payment(self, payment: Payment, timestamp: datetime) -> None:
+        self.payments.append(payment)
+        self.updated_at = timestamp
+
     # ── payment calculations ─────────────────────────────────────────────────
 
     def total(self) -> Decimal:
-        """Grand total of all items."""
         return sum((i.subtotal() for i in self.items), Decimal("0"))
 
     def total_paid(self) -> Decimal:
-        """Sum of all partial payments registered so far."""
-        return sum((i.amount_paid for i in self.items), Decimal("0"))
+        return sum((p.amount for p in self.payments), Decimal("0"))
+
+    def total_tips(self) -> Decimal:
+        return sum((p.tip for p in self.payments), Decimal("0"))
 
     def total_pending(self) -> Decimal:
-        """Amount still owed."""
         return self.total() - self.total_paid()
-
-    def register_item_payment(self, item_id: UUID, amount: Decimal, timestamp: datetime) -> None:
-        item = self.get_item(item_id)
-        if item is not None:
-            item.register_payment(amount)
-        self.updated_at = timestamp
 
     def is_fully_paid(self) -> bool:
         return self.total_pending() <= Decimal("0")

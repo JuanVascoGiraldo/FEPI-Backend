@@ -4,6 +4,8 @@ from starlette.middleware import Middleware
 from app.logger import configure_logging
 from app.config import get_settings
 from app.application import router
+from app.dependencies import get_dependency
+from app.infrastructure.persistance.mongodb.clients import MongoClient
 from fastapi import FastAPI, APIRouter
 
 
@@ -32,11 +34,14 @@ def create_app(on_shutdown=None, on_startup=None):
         Middleware(ContextMiddleware),
         Middleware(ErrorMiddleWare),
     ]
+    async def _ensure_indexes() -> None:
+        await get_dependency(MongoClient).ensure_indexes()
+
     if not on_shutdown:
         on_shutdown = []
     if not on_startup:
         on_startup = []
-    on_startup.extend([])
+    on_startup.append(_ensure_indexes)
     app = FastAPI(
         title=get_settings().app_name,
         on_startup=on_startup,

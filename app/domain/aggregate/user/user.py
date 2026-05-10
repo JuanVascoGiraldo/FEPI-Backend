@@ -9,7 +9,7 @@ from .email import Email
 
 class User(BaseModel):
     id: UUID
-    group: str
+    group: Optional[str] = None
     first_name: str
     last_name: str
     email: Email

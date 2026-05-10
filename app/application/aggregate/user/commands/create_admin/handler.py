@@ -40,7 +40,7 @@ class Handler:
         if group is None:
             raise GroupNotFoundException(request.group)
 
-        existing = await self.user_repository.get_by_email(request.email)
+        existing = await self.user_repository.get_by_group_and_email(request.group, request.email)
         if existing is not None:
             raise EmailAlreadyExistsException(request.email)
 

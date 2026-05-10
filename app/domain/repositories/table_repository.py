@@ -15,6 +15,10 @@ class TableRepository(ABC):
         pass
 
     @abstractmethod
+    async def get_ids_by_group(self, group: str) -> List[UUID]:
+        pass
+
+    @abstractmethod
     async def get_by_group_and_status(self, group: str, status: TableStatus) -> List[Table]:
         pass
 

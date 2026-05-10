@@ -29,12 +29,9 @@ class Handler:
         self.logger = logger
 
     async def handle(self, request: Request, timestamp: datetime) -> Response:
-        user = await self.user_repository.get_by_email(request.email)
+        user = await self.user_repository.get_by_group_and_email(request.group, request.email)
         if user is None:
             raise UserNotFoundException("User not found")
-
-        if user.group != request.group:
-            raise InvalidCredentialsException()
 
         match, needs_rehash = self.encryption_service.verify(
             request.password, user.password_hash

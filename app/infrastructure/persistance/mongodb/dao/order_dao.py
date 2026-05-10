@@ -8,6 +8,7 @@ from pydantic import Field
 
 from .base_dao import BaseDao
 from .order_item_dao import OrderItemDao
+from .payment_dao import PaymentDao
 
 
 ORDER_PK_INDEX = "ORDER#"
@@ -23,6 +24,7 @@ class OrderDao(BaseDao):
     table_id: UUID
     waiter_id: UUID | None = None
     items: list[OrderItemDao] = Field(default_factory=list)
+    payments: list[PaymentDao] = Field(default_factory=list)
     status: int
     notes: str | None = None
     created_at: datetime

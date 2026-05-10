@@ -33,6 +33,14 @@ class DishRepositoryImpl(DishRepository):
         )
         return [from_dao_to_dish(DishDao.from_document(d)) for d in documents]
 
+    async def get_ids_by_group(self, group: str) -> List[UUID]:
+        documents = await self.mongo_client.find_many(
+            self.COLLECTION,
+            {"sk": DishDao.SK, "group": group},
+            {"id": 1, "_id": 0},
+        )
+        return [UUID(str(d["id"])) for d in documents]
+
     async def get_available_by_group(self, group: str) -> List[Dish]:
         documents = await self.mongo_client.find_many(
             self.COLLECTION,

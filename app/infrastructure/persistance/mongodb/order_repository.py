@@ -37,6 +37,14 @@ class OrderRepositoryImpl(OrderRepository):
         )
         return [from_dao_to_order(OrderDao.from_document(d)) for d in documents]
 
+    async def get_ids_by_group(self, group: str) -> List[UUID]:
+        documents = await self.mongo_client.find_many(
+            self.COLLECTION,
+            {"sk": OrderDao.SK, "group": group},
+            {"id": 1, "_id": 0},
+        )
+        return [UUID(str(d["id"])) for d in documents]
+
     async def get_by_table_id(self, table_id: UUID) -> List[Order]:
         index_docs = await self.mongo_client.find_many(
             self.INDEX_COLLECTION,

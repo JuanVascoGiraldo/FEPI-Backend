@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection
+from pymongo import ASCENDING
 
 from app.config import Config
 
@@ -38,8 +39,9 @@ class MongoClientImpl(MongoClient):
         self,
         collection: str,
         filters: dict[str, Any],
+        projection: dict[str, Any] | None = None,
     ) -> list[dict[str, Any]]:
-        cursor = self._get_collection(collection).find(filters)
+        cursor = self._get_collection(collection).find(filters, projection)
         return await cursor.to_list(length=None)
 
     async def update_one(
@@ -57,3 +59,26 @@ class MongoClientImpl(MongoClient):
     async def delete_one(self, collection: str, filters: dict[str, Any]) -> bool:
         result = await self._get_collection(collection).delete_one(filters)
         return result.deleted_count > 0
+
+    async def ensure_indexes(self) -> None:
+        users = self._get_collection("users")
+        await users.create_index([("pk", ASCENDING), ("sk", ASCENDING)], unique=True, background=True)
+        await users.create_index([("sk", ASCENDING), ("role", ASCENDING)], background=True)
+        await users.create_index([("sk", ASCENDING), ("group", ASCENDING)], background=True)
+        await users.create_index([("sk", ASCENDING), ("group", ASCENDING), ("role", ASCENDING)], background=True)
+        await users.create_index([("sk", ASCENDING), ("email", ASCENDING)], background=True)
+
+        dishes = self._get_collection("dishes")
+        await dishes.create_index([("pk", ASCENDING), ("sk", ASCENDING)], unique=True, background=True)
+        await dishes.create_index([("sk", ASCENDING), ("group", ASCENDING)], background=True)
+
+        tables = self._get_collection("tables")
+        await tables.create_index([("pk", ASCENDING), ("sk", ASCENDING)], unique=True, background=True)
+        await tables.create_index([("sk", ASCENDING), ("group", ASCENDING)], background=True)
+
+        orders = self._get_collection("orders")
+        await orders.create_index([("pk", ASCENDING), ("sk", ASCENDING)], unique=True, background=True)
+        await orders.create_index([("sk", ASCENDING), ("group", ASCENDING)], background=True)
+
+        indexes = self._get_collection("indexes")
+        await indexes.create_index([("pk", ASCENDING)], unique=True, background=True)

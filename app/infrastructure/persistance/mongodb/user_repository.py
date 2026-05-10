@@ -9,7 +9,7 @@ from app.infrastructure.persistance.mongodb.dao.user_dao import UserDao
 from app.infrastructure.persistance.mongodb.dao.index_dao import IndexDao
 from app.infrastructure.persistance.mongodb.mappers.user import from_dao_to_user, from_user_to_dao
 
-EMAIL_PK_PREFIX = "EMAIL#"
+GROUP_EMAIL_PK_PREFIX = "GROUP_EMAIL#"
 USER_SK_PREFIX = "USER#"
 
 
@@ -21,9 +21,9 @@ class UserRepositoryImpl(UserRepository):
         self.mongo_client = mongo_client
         self.config = config
 
-    def _email_index(self, email: str, user_id: UUID) -> IndexDao:
+    def _group_email_index(self, group: Optional[str], email: str, user_id: UUID) -> IndexDao:
         return IndexDao(
-            pk=f"{EMAIL_PK_PREFIX}{email.lower()}",
+            pk=f"{GROUP_EMAIL_PK_PREFIX}{group or ''}:{email.lower()}",
             sk=f"{USER_SK_PREFIX}{user_id}",
         )
 
@@ -37,9 +37,18 @@ class UserRepositoryImpl(UserRepository):
         return from_dao_to_user(UserDao.from_document(document))
 
     async def get_by_email(self, email: str) -> Optional[User]:
+        document = await self.mongo_client.find_one(
+            self.COLLECTION,
+            {"sk": UserDao.SK, "email": email.lower()},
+        )
+        if document is None:
+            return None
+        return from_dao_to_user(UserDao.from_document(document))
+
+    async def get_by_group_and_email(self, group: Optional[str], email: str) -> Optional[User]:
         index = await self.mongo_client.find_one(
             self.INDEX_COLLECTION,
-            {"pk": f"{EMAIL_PK_PREFIX}{email.lower()}"},
+            {"pk": f"{GROUP_EMAIL_PK_PREFIX}{group or ''}:{email.lower()}"},
         )
         if index is None:
             return None
@@ -60,15 +69,22 @@ class UserRepositoryImpl(UserRepository):
         )
         return [from_dao_to_user(UserDao.from_document(d)) for d in documents]
 
+    async def get_by_role(self, role: UserRole) -> List[User]:
+        documents = await self.mongo_client.find_many(
+            self.COLLECTION,
+            {"sk": UserDao.SK, "role": int(role)},
+        )
+        return [from_dao_to_user(UserDao.from_document(d)) for d in documents]
+
     async def create(self, user: User) -> None:
         dao = from_user_to_dao(user)
         document = dao.to_document()
         document["entity"] = "USER"
         await self.mongo_client.insert_one(self.COLLECTION, document)
 
-        email_index = self._email_index(user.email.value, user.id)
-        index_doc = email_index.to_document()
-        index_doc["entity"] = "USER_EMAIL_INDEX"
+        group_email_index = self._group_email_index(user.group, user.email.value, user.id)
+        index_doc = group_email_index.to_document()
+        index_doc["entity"] = "USER_GROUP_EMAIL_INDEX"
         await self.mongo_client.insert_one(self.INDEX_COLLECTION, index_doc)
 
     async def update(self, user: User) -> None:
@@ -89,5 +105,5 @@ class UserRepositoryImpl(UserRepository):
         if user:
             await self.mongo_client.delete_one(
                 self.INDEX_COLLECTION,
-                {"pk": f"{EMAIL_PK_PREFIX}{user.email.value}"},
+                {"pk": f"{GROUP_EMAIL_PK_PREFIX}{user.group or ''}:{user.email.value.lower()}"},
             )

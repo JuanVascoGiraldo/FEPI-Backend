@@ -17,7 +17,6 @@ class OrderItemDao(BaseDao):
     unit_price: Decimal
     quantity: int
     specifications: list[str] = Field(default_factory=list)
-    amount_paid: Decimal
     status: int
 
     def build_pk(self) -> str:

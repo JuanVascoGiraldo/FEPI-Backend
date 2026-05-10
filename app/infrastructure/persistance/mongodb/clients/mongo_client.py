@@ -24,6 +24,7 @@ class MongoClient(ABC):
         self,
         collection: str,
         filters: dict[str, Any],
+        projection: dict[str, Any] | None = None,
     ) -> list[dict[str, Any]]:
         raise NotImplementedError
 
@@ -38,4 +39,8 @@ class MongoClient(ABC):
 
     @abstractmethod
     async def delete_one(self, collection: str, filters: dict[str, Any]) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
+    async def ensure_indexes(self) -> None:
         raise NotImplementedError

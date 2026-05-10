@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime
 from logging import Logger
 from uuid import uuid4
 
@@ -6,12 +6,10 @@ from app.domain.aggregate.user import User
 from app.domain.aggregate.user.email import Email
 from app.domain.aggregate.user.user_role import UserRole
 from app.domain.exceptions.email_already_exists import EmailAlreadyExistsException
-from app.domain.exceptions.group_not_found import GroupNotFoundException
 from app.domain.repositories.user_repository import UserRepository
-from app.domain.repositories.group_repository import GroupRepository
 from app.domain.services.encryption_service import EncryptionService
 
-from .request import Request, SUPERADMIN_GROUP
+from .request import Request
 from .response import Response
 
 
@@ -19,27 +17,21 @@ class Handler:
     def __init__(
         self,
         user_repository: UserRepository,
-        group_repository: GroupRepository,
         encryption_service: EncryptionService,
         logger: Logger,
     ) -> None:
         self.user_repository = user_repository
-        self.group_repository = group_repository
         self.encryption_service = encryption_service
         self.logger = logger
 
     async def handle(self, request: Request, timestamp: datetime) -> Response:
-        group = await self.group_repository.get_by_name(SUPERADMIN_GROUP)
-        if group is None:
-            raise GroupNotFoundException(SUPERADMIN_GROUP)
-
-        existing = await self.user_repository.get_by_email(request.email)
+        existing = await self.user_repository.get_by_group_and_email(None, request.email)
         if existing is not None:
             raise EmailAlreadyExistsException(request.email)
 
         user = User(
             id=uuid4(),
-            group=SUPERADMIN_GROUP,
+            group=None,
             first_name=request.first_name,
             last_name=request.last_name,
             email=Email(value=request.email),

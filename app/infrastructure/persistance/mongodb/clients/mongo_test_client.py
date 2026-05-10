@@ -41,12 +41,24 @@ class MongoTestClient(MongoClient):
         self,
         collection: str,
         filters: dict[str, Any],
+        projection: dict[str, Any] | None = None,
     ) -> list[dict[str, Any]]:
-        return [
+        results = [
             deepcopy(item)
             for item in self._collection(collection)
             if self._matches(item, filters)
         ]
+        if projection is None:
+            return results
+        include_keys = {k for k, v in projection.items() if v == 1}
+        exclude_keys = {k for k, v in projection.items() if v == 0}
+        projected = []
+        for item in results:
+            if include_keys:
+                projected.append({k: v for k, v in item.items() if k in include_keys})
+            else:
+                projected.append({k: v for k, v in item.items() if k not in exclude_keys})
+        return projected
 
     async def update_one(
         self,
@@ -68,3 +80,6 @@ class MongoTestClient(MongoClient):
                 del items[index]
                 return True
         return False
+
+    async def ensure_indexes(self) -> None:
+        pass

@@ -15,11 +15,19 @@ class UserRepository(ABC):
         pass
 
     @abstractmethod
+    async def get_by_group_and_email(self, group: Optional[str], email: str) -> Optional[User]:
+        pass
+
+    @abstractmethod
     async def get_by_group(self, group: str) -> List[User]:
         pass
 
     @abstractmethod
     async def get_by_group_and_role(self, group: str, role: UserRole) -> List[User]:
+        pass
+
+    @abstractmethod
+    async def get_by_role(self, role: UserRole) -> List[User]:
         pass
 
     @abstractmethod

@@ -32,6 +32,14 @@ class TableRepositoryImpl(TableRepository):
         )
         return [from_dao_to_table(TableDao.from_document(d)) for d in documents]
 
+    async def get_ids_by_group(self, group: str) -> List[UUID]:
+        documents = await self.mongo_client.find_many(
+            self.COLLECTION,
+            {"sk": TableDao.SK, "group": group},
+            {"id": 1, "_id": 0},
+        )
+        return [UUID(str(d["id"])) for d in documents]
+
     async def get_by_group_and_status(self, group: str, status: TableStatus) -> List[Table]:
         documents = await self.mongo_client.find_many(
             self.COLLECTION,
