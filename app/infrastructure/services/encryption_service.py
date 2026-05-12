@@ -1,9 +1,16 @@
-from app.domain.aggregate.auth import SessionContainer
-from app.domain.services import EncryptionService
-from app.config import Config
+import base64
+
+from cryptography.fernet import Fernet
 from jose import jwt
 from argon2 import PasswordHasher
-from hashlib import sha256
+
+from app.config import Config
+from app.domain.aggregate.auth import SessionContainer
+from app.domain.services import EncryptionService
+
+# Stable dev key (all-zero bytes encoded in URL-safe base64).
+# Never use this in production — set ENCRYPTION_KEY in the environment.
+_DEV_KEY = base64.urlsafe_b64encode(b'\x00' * 32)
 
 
 class EncryptionServiceImpl(EncryptionService):
@@ -12,8 +19,11 @@ class EncryptionServiceImpl(EncryptionService):
         self.hasher = PasswordHasher()
         self.JWT_SECRET = config.JWT_SECRET
         self.JWT_ALGORITHM = config.JWT_ALGORITHM
+        raw_key = config.ENCRYPTION_KEY
+        key_bytes = raw_key.encode() if raw_key else _DEV_KEY
+        self._fernet = Fernet(key_bytes)
 
-    def hash(self, data):
+    def hash(self, data: str) -> str:
         return self.hasher.hash(data)
 
     def verify(self, text: str, hashed_text: str):
@@ -33,3 +43,9 @@ class EncryptionServiceImpl(EncryptionService):
         data = jwt.decode(token, self.JWT_SECRET,
                           algorithms=[self.JWT_ALGORITHM])
         return SessionContainer(**data)
+
+    def encrypt(self, text: str) -> str:
+        return self._fernet.encrypt(text.encode()).decode()
+
+    def decrypt(self, ciphertext: str) -> str:
+        return self._fernet.decrypt(ciphertext.encode()).decode()

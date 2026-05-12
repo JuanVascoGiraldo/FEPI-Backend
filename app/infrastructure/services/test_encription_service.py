@@ -1,6 +1,7 @@
+from jose import jwt
+
 from app.domain.aggregate.auth import SessionContainer
 from app.domain.services import EncryptionService
-from jose import jwt
 
 
 class EncryptionServiceTestImpl(EncryptionService):
@@ -9,7 +10,7 @@ class EncryptionServiceTestImpl(EncryptionService):
         self.JWT_SECRET = ""
         self.JWT_ALGORITHM = "HS256"
 
-    def hash(self, data):
+    def hash(self, data: str) -> str:
         return data
 
     def verify(self, text: str, hashed_text: str):
@@ -25,3 +26,8 @@ class EncryptionServiceTestImpl(EncryptionService):
                           algorithms=[self.JWT_ALGORITHM])
         return SessionContainer(**data)
 
+    def encrypt(self, text: str) -> str:
+        return text
+
+    def decrypt(self, ciphertext: str) -> str:
+        return ciphertext

@@ -27,13 +27,15 @@ from app.infrastructure.persistance.mongodb.group_repository import GroupReposit
 from app.domain.services import (
     EncryptionService,
     EmailService,
-    CodeGeneratorService
+    CodeGeneratorService,
+    RenderService,
 )
 from app.infrastructure.services import (
     EncryptionServiceImpl,
     EmailServiceImpl,
     CodeGeneratorServiceImpl,
-    EncryptionServiceTestImpl
+    RenderServiceImpl,
+    EncryptionServiceTestImpl,
 )
 
 
@@ -140,6 +142,7 @@ def build_dependencies(
     container.add_dependency(TableRepository, TableRepositoryImpl, singleton=True)
     container.add_dependency(OrderRepository, OrderRepositoryImpl, singleton=True)
     container.add_dependency(GroupRepository, GroupRepositoryImpl, singleton=True)
+    container.add_dependency(RenderService, RenderServiceImpl, singleton=True)
     container.add_dependency(EmailService, EmailServiceImpl, singleton=True)
     container.add_dependency(CodeGeneratorService, CodeGeneratorServiceImpl, singleton=True)
 

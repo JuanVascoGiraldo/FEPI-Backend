@@ -20,6 +20,7 @@ def create_app(on_shutdown=None, on_startup=None):
         "http://127.0.0.1:5173",
         "http://127.0.0.1:5174",
         "http://127.0.0.1:5175",
+        "https://fepi-frontend.vercel.app",
     ]
     middlewares = [
         Middleware(CORSMiddleware,

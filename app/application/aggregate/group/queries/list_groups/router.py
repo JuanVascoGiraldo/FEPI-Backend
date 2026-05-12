@@ -10,7 +10,7 @@ from .response import Response
 router = APIRouter()
 
 
-@router.get("", response_model=Response, status_code=status.HTTP_200_OK)
+@router.get("/", response_model=Response, status_code=status.HTTP_200_OK)
 async def list_groups(session: Meta = Depends(get_session_meta)) -> Response:
     handler: Handler = get_dependency(Handler)
     return await handler.handle(session)

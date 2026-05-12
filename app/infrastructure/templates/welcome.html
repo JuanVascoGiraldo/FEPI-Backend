@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light" />
+  <title>Welcome to TERMI</title>
+</head>
+<body style="margin:0; padding:0; background-color:#f1f5f9; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; -webkit-font-smoothing:antialiased;">
+
+  <!-- Outer wrapper -->
+  <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color:#f1f5f9;">
+    <tr>
+      <td align="center" style="padding:48px 16px;">
+
+        <!-- Card container -->
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" style="max-width:600px; width:100%; border-radius:20px; overflow:hidden; box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+
+          <!-- ── HEADER ── -->
+          <tr>
+            <td style="background-color:#0f172a; padding:32px 40px 28px;">
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td valign="middle">
+                    <!-- Logo mark -->
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="width:42px; height:42px; background-color:#f59e0b; border-radius:11px; text-align:center; vertical-align:middle; box-shadow:0 4px 12px rgba(245,158,11,0.35);">
+                          <span style="font-size:22px; line-height:42px;">&#127859;</span>
+                        </td>
+                        <td style="padding-left:12px; vertical-align:middle;">
+                          <span style="font-size:22px; font-weight:800; color:#ffffff; letter-spacing:-0.5px; line-height:1;">TERMI</span>
+                          <br />
+                          <span style="font-size:11px; font-weight:500; color:#64748b; letter-spacing:0.06em; text-transform:uppercase;">Restaurant Manager</span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Amber accent line -->
+          <tr>
+            <td style="background:linear-gradient(90deg,#f59e0b 0%,#fbbf24 100%); height:3px; font-size:0; line-height:0;">&nbsp;</td>
+          </tr>
+
+          <!-- ── HERO ── -->
+          <tr>
+            <td style="background-color:#ffffff; padding:48px 40px 0;">
+              <h1 style="margin:0 0 6px 0; font-size:30px; font-weight:800; color:#0f172a; line-height:1.15; letter-spacing:-0.5px;">
+                Welcome, {{name}}!
+              </h1>
+              <p style="margin:0 0 32px 0; font-size:16px; color:#64748b; line-height:1.65;">
+                Your TERMI account is ready. Here&rsquo;s a summary of your access.
+              </p>
+            </td>
+          </tr>
+
+          <!-- ── DETAILS CARD ── -->
+          <tr>
+            <td style="background-color:#ffffff; padding:0 40px 32px;">
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%"
+                style="background-color:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; overflow:hidden;">
+
+                <!-- Card header -->
+                <tr>
+                  <td style="background-color:#f59e0b; padding:12px 24px;">
+                    <span style="font-size:11px; font-weight:700; color:#0f172a; text-transform:uppercase; letter-spacing:0.1em;">
+                      Account Details
+                    </span>
+                  </td>
+                </tr>
+
+                <!-- Role row -->
+                <tr>
+                  <td style="padding:20px 24px 0;">
+                    <span style="display:block; font-size:11px; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">Role</span>
+                    <span style="display:block; font-size:15px; font-weight:700; color:#0f172a;">{{role}}</span>
+                  </td>
+                </tr>
+
+                <!-- Group row -->
+                <tr>
+                  <td style="padding:16px 24px 0;">
+                    <span style="display:block; font-size:11px; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">Restaurant Group</span>
+                    <span style="display:block; font-size:15px; font-weight:700; color:#0f172a;">{{group}}</span>
+                  </td>
+                </tr>
+
+                <!-- Temporary password row -->
+                <tr>
+                  <td style="padding:16px 24px 20px;">
+                    <span style="display:block; font-size:11px; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">Temporary Password</span>
+                    <span style="display:inline-block; font-size:15px; font-weight:700; color:#0f172a; font-family:monospace; background-color:#fef3c7; border:1px solid #f59e0b; border-radius:8px; padding:6px 14px; letter-spacing:0.04em;">{{password}}</span>
+                    <span style="display:block; font-size:12px; color:#94a3b8; margin-top:6px;">Change this password after your first login.</span>
+                  </td>
+                </tr>
+
+              </table>
+            </td>
+          </tr>
+
+          <!-- ── BODY TEXT ── -->
+          <tr>
+            <td style="background-color:#ffffff; padding:0 40px 36px;">
+              <p style="margin:0 0 28px 0; font-size:15px; color:#475569; line-height:1.7;">
+                You can now log in to your dashboard to manage tables, track orders in real time,
+                and coordinate your restaurant team — all from one place.
+              </p>
+
+              <!-- CTA button -->
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="background-color:#f59e0b; border-radius:11px; box-shadow:0 4px 14px rgba(245,158,11,0.30);">
+                    <a href="{{app_url}}"
+                      style="display:inline-block; padding:15px 32px; font-size:15px; font-weight:700; color:#0f172a; text-decoration:none; letter-spacing:-0.2px;">
+                      Go to my dashboard &rarr;
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ── DIVIDER ── -->
+          <tr>
+            <td style="background-color:#ffffff; padding:0 40px;">
+              <div style="border-top:1px solid #e2e8f0; font-size:0; line-height:0;">&nbsp;</div>
+            </td>
+          </tr>
+
+          <!-- ── TIPS ── -->
+          <tr>
+            <td style="background-color:#ffffff; padding:28px 40px 40px;">
+              <p style="margin:0 0 16px 0; font-size:13px; font-weight:700; color:#0f172a; text-transform:uppercase; letter-spacing:0.08em;">
+                Quick tips
+              </p>
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td width="24" valign="top" style="padding-top:2px;">
+                    <span style="display:inline-block; width:6px; height:6px; background-color:#f59e0b; border-radius:50%; margin-top:6px;"></span>
+                  </td>
+                  <td style="padding-bottom:10px;">
+                    <span style="font-size:14px; color:#475569; line-height:1.6;">Keep your password secure and never share it.</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="24" valign="top" style="padding-top:2px;">
+                    <span style="display:inline-block; width:6px; height:6px; background-color:#f59e0b; border-radius:50%; margin-top:6px;"></span>
+                  </td>
+                  <td style="padding-bottom:10px;">
+                    <span style="font-size:14px; color:#475569; line-height:1.6;">Contact your administrator if you have trouble signing in.</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="24" valign="top" style="padding-top:2px;">
+                    <span style="display:inline-block; width:6px; height:6px; background-color:#f59e0b; border-radius:50%; margin-top:6px;"></span>
+                  </td>
+                  <td>
+                    <span style="font-size:14px; color:#475569; line-height:1.6;">Use the sidebar to navigate between tables, orders, and staff.</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ── FOOTER ── -->
+          <tr>
+            <td style="background-color:#f8fafc; border-top:1px solid #e2e8f0; border-radius:0 0 20px 20px; padding:24px 40px;">
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td>
+                    <p style="margin:0 0 6px 0; font-size:12px; color:#94a3b8; line-height:1.6;">
+                      You received this email because an account was created for you on <strong style="color:#64748b;">TERMI</strong>.
+                      If this wasn&rsquo;t you, please ignore this message.
+                    </p>
+                    <p style="margin:0; font-size:12px; color:#cbd5e1;">
+                      &copy; {{year}} TERMI Restaurant Manager. All rights reserved.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+        </table>
+        <!-- / Card container -->
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

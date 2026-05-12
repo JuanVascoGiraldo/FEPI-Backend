@@ -25,6 +25,10 @@ class Config(BaseSettings):
     mongodb_db: str = Field('fepi')
     JWT_ALGORITHM: str = Field('HS256')
     JWT_SECRET: str = Field('')
+    ENCRYPTION_KEY: str = Field('')  # Fernet key: 32-byte URL-safe base64 (run Fernet.generate_key())
+    RESEND_API_KEY: str = Field('')
+    EMAIL_FROM: str = Field('TERMI <onboarding@resend.dev>')
+    APP_URL: str = Field('http://localhost:3000')
 
     def is_dev(self):
         return not (

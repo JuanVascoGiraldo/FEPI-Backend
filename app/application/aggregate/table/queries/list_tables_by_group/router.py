@@ -5,14 +5,12 @@ from app.infrastructure.inyections import get_session_meta
 from app.domain.aggregate.value_objects.meta import Meta
 
 from .handler import Handler
-from .request import Request
 from .response import Response
-
 
 router = APIRouter()
 
 
-@router.post("/", response_model=Response, status_code=status.HTTP_201_CREATED)
-async def create_group(request: Request, session: Meta = Depends(get_session_meta)):
+@router.get("/", response_model=Response, status_code=status.HTTP_200_OK)
+async def list_tables_by_group(session: Meta = Depends(get_session_meta)) -> Response:
     handler: Handler = get_dependency(Handler)
-    return await handler.handle(request, session)
+    return await handler.handle(session)

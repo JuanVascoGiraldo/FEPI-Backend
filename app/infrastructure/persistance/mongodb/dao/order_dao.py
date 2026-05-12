@@ -18,6 +18,8 @@ ORDER_SK_INDEX = "INFO#"
 class OrderDao(BaseDao):
     PK: ClassVar[str] = ORDER_PK_INDEX
     SK: ClassVar[str] = ORDER_SK_INDEX
+    # group, table_id, waiter_id and status are excluded — they are used in MongoDB query filters.
+    ENCRYPTED_FIELDS: ClassVar[frozenset[str]] = frozenset({"notes"})
 
     id: UUID
     group: str

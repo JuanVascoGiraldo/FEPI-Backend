@@ -8,6 +8,7 @@ from app.domain.aggregate.user.user_role import UserRole
 from app.domain.exceptions.email_already_exists import EmailAlreadyExistsException
 from app.domain.repositories.user_repository import UserRepository
 from app.domain.services.encryption_service import EncryptionService
+from app.domain.services.email_service import EmailService
 
 from .request import Request
 from .response import Response
@@ -18,10 +19,12 @@ class Handler:
         self,
         user_repository: UserRepository,
         encryption_service: EncryptionService,
+        email_service: EmailService,
         logger: Logger,
     ) -> None:
         self.user_repository = user_repository
         self.encryption_service = encryption_service
+        self.email_service = email_service
         self.logger = logger
 
     async def handle(self, request: Request, timestamp: datetime) -> Response:
@@ -45,6 +48,15 @@ class Handler:
 
         await self.user_repository.create(user)
         self.logger.info(f"Superadmin created: {user.id}")
+
+        try:
+            await self.email_service.send_welcome(
+                to=user.email,
+                name=user.full_name(),
+                role="Superadmin",
+            )
+        except Exception as exc:
+            self.logger.error(f"Failed to send welcome email to {user.email.value}: {exc}")
 
         return Response(
             id=user.id,

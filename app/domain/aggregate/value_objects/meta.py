@@ -8,6 +8,6 @@ class Meta(BaseModel):
     user_id: UUID
     session_id: UUID
     role: UserRole
-    group: str
+    group: str | None = None
     timestamp: datetime
     jwt: str

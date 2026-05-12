@@ -11,6 +11,9 @@ from .base_dao import BaseDao
 
 
 class PaymentDao(BaseDao):
+    # All payment fields are embedded inside OrderDao — none are used as top-level query filters.
+    ENCRYPTED_FIELDS: ClassVar[frozenset[str]] = frozenset({"email", "amount", "tip"})
+
     id: UUID
     amount: Decimal
     tip: Decimal

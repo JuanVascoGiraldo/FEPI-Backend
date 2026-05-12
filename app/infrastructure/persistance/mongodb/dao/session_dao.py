@@ -16,6 +16,8 @@ SESSION_SK_INDEX = "DATA#"
 class SessionDao(BaseDao):
     PK: ClassVar[str] = SESSION_PK_INDEX
     SK: ClassVar[str] = SESSION_SK_INDEX
+    # token is stored encrypted; lookups use the index (TOKEN# prefix), not this field directly.
+    ENCRYPTED_FIELDS: ClassVar[frozenset[str]] = frozenset({"token"})
 
     id: UUID
     token: str

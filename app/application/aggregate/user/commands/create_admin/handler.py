@@ -1,3 +1,5 @@
+import secrets
+import string
 from datetime import datetime, timezone
 from logging import Logger
 from uuid import uuid4
@@ -12,6 +14,7 @@ from app.domain.exceptions import (
 from app.domain.repositories.user_repository import UserRepository
 from app.domain.repositories.group_repository import GroupRepository
 from app.domain.services.encryption_service import EncryptionService
+from app.domain.services.email_service import EmailService
 from app.domain.aggregate.value_objects.meta import Meta
 from .request import Request
 from .response import Response
@@ -23,11 +26,13 @@ class Handler:
         user_repository: UserRepository,
         group_repository: GroupRepository,
         encryption_service: EncryptionService,
+        email_service: EmailService,
         logger: Logger,
     ) -> None:
         self.user_repository = user_repository
         self.group_repository = group_repository
         self.encryption_service = encryption_service
+        self.email_service = email_service
         self.logger = logger
 
     async def handle(self, request: Request, session: Meta) -> Response:
@@ -44,13 +49,16 @@ class Handler:
         if existing is not None:
             raise EmailAlreadyExistsException(request.email)
 
+        alphabet = string.ascii_letters + string.digits + "!@#$%&*"
+        password = "".join(secrets.choice(alphabet) for _ in range(12))
+
         user = User(
             id=uuid4(),
             group=request.group,
             first_name=request.first_name,
             last_name=request.last_name,
             email=Email(value=request.email),
-            password_hash=self.encryption_service.hash(request.password),
+            password_hash=self.encryption_service.hash(password),
             role=UserRole.ADMIN,
             is_active=True,
             phone=request.phone,
@@ -60,6 +68,17 @@ class Handler:
 
         await self.user_repository.create(user)
         self.logger.info(f"Admin created: {user.id} for group '{user.group}'")
+
+        try:
+            await self.email_service.send_welcome(
+                to=user.email,
+                name=user.full_name(),
+                role="Admin",
+                group=user.group,
+                password=password,
+            )
+        except Exception as exc:
+            self.logger.error(f"Failed to send welcome email to {user.email.value}: {exc}")
 
         return Response(
             id=user.id,

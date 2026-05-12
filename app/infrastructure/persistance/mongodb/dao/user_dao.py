@@ -16,6 +16,8 @@ USER_SK_INDEX = "PROFILE#"
 class UserDao(BaseDao):
     PK: ClassVar[str] = USER_PK_INDEX
     SK: ClassVar[str] = USER_SK_INDEX
+    # email, group and role are excluded — they are used in MongoDB query filters.
+    ENCRYPTED_FIELDS: ClassVar[frozenset[str]] = frozenset({"first_name", "last_name", "phone"})
 
     id: UUID
     group: str | None = None

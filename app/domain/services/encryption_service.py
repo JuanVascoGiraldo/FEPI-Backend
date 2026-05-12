@@ -21,3 +21,12 @@ class EncryptionService(ABC):
     def decode_jwt(self, token: str) -> SessionContainer:
         pass
 
+    @abstractmethod
+    def encrypt(self, text: str) -> str:
+        """Symmetrically encrypt a plaintext string. Returns a URL-safe base64 ciphertext."""
+        pass
+
+    @abstractmethod
+    def decrypt(self, ciphertext: str) -> str:
+        """Decrypt a ciphertext produced by encrypt(). Returns the original plaintext."""
+        pass
