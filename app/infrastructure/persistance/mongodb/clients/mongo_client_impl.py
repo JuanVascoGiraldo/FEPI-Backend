@@ -20,6 +20,7 @@ class MongoClientImpl(MongoClient):
         self._client = AsyncIOMotorClient(
             mongo_url,
             uuidRepresentation="standard",
+            tls=True,
             tlsCAFile=certifi.where(),
         )
         self._db = self._client[mongo_db]
