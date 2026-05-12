@@ -71,3 +71,5 @@ dmypy.json
 
 # Private keys
 .envt
+
+.vercel

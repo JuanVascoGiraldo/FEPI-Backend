@@ -21,6 +21,8 @@ def create_app(on_shutdown=None, on_startup=None):
         "http://127.0.0.1:5174",
         "http://127.0.0.1:5175",
         "https://fepi-frontend.vercel.app",
+        "https://fepi-frontend-juan-esteban-vasco-giraldos-projects.vercel.app",
+        "https://www.termiapp.email",
     ]
     middlewares = [
         Middleware(CORSMiddleware,
