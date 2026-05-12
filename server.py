@@ -36,7 +36,12 @@ def create_app(on_shutdown=None, on_startup=None):
         Middleware(ErrorMiddleWare),
     ]
     async def _ensure_indexes() -> None:
-        await get_dependency(MongoClient).ensure_indexes()
+        from logging import getLogger
+        logger = getLogger(__name__)
+        try:
+            await get_dependency(MongoClient).ensure_indexes()
+        except Exception as exc:
+            logger.error(f"ensure_indexes failed (non-fatal): {exc}")
 
     if not on_shutdown:
         on_shutdown = []

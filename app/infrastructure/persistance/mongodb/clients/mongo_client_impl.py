@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+import certifi
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection
 from pymongo import ASCENDING
 
@@ -19,6 +20,7 @@ class MongoClientImpl(MongoClient):
         self._client = AsyncIOMotorClient(
             mongo_url,
             uuidRepresentation="standard",
+            tlsCAFile=certifi.where(),
         )
         self._db = self._client[mongo_db]
 
