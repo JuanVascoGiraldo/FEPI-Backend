@@ -3,7 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware import Middleware
 from app.logger import configure_logging
 from app.config import get_settings
-from app.application import router
+from app.application.aggregate import router as aggregate_router
+from app.application.commands import router as commands_router
+from app.application.public import router as public_router
 from app.dependencies import get_dependency
 from app.infrastructure.persistance.mongodb.clients import MongoClient
 from fastapi import FastAPI, APIRouter
@@ -58,10 +60,11 @@ def create_app(on_shutdown=None, on_startup=None):
         openapi_url=get_settings().get_open_api_path(),
     )
 
+    router = APIRouter(prefix="/api")
+    router.include_router(commands_router)
+    router.include_router(aggregate_router)
+    router.include_router(public_router)
     app.include_router(router)
-    api_router = APIRouter(prefix="/api")
-    api_router.include_router(router)
-    app.include_router(api_router)
     return app
 
 
