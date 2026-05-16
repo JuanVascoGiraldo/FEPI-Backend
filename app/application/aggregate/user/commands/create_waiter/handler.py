@@ -1,3 +1,5 @@
+import secrets
+import string
 from datetime import datetime, timezone
 from logging import Logger
 from uuid import uuid4
@@ -49,13 +51,16 @@ class Handler:
         if existing is not None:
             raise EmailAlreadyExistsException(request.email)
 
+        alphabet = string.ascii_letters + string.digits + "!@#$%&*"
+        password = "".join(secrets.choice(alphabet) for _ in range(12))
+
         user = User(
             id=uuid4(),
             group=request.group,
             first_name=request.first_name,
             last_name=request.last_name,
             email=Email(value=request.email),
-            password_hash=self.encryption_service.hash(request.password),
+            password_hash=self.encryption_service.hash(password),
             role=UserRole.WAITER,
             is_active=True,
             phone=request.phone,
@@ -72,7 +77,7 @@ class Handler:
                 name=user.full_name(),
                 role="Mesero",
                 group=user.group,
-                password=request.password,
+                password=password,
             )
         except Exception as exc:
             self.logger.error(f"Failed to send welcome email to {user.email.value}: {exc}")

@@ -37,31 +37,31 @@ class Handler:
         if not order:
             raise OrderNotFoundException(str(order_id))
 
-        removed = order.get_item(item_id)
-        if not removed:
+        item = order.get_item(item_id)
+        if not item:
             raise OrderItemNotFoundException(str(item_id))
 
-        if removed.status >= OrderItemStatus.DELIVERED:
-            raise IsNotAuthorizedException()
-
-        item_name = removed.name
-        order.remove_item(item_id, session.timestamp)
+        item.status = OrderItemStatus.DELIVERED
+        order.updated_at = session.timestamp
         await self.order_repository.update(order)
-        self.logger.info(f"Item {item_id} removed from order {order.id}")
+
+        self.logger.info("Item %s marked as DELIVERED in order %s", item_id, order_id)
 
         table = await self.table_repository.get_by_id(order.table_id)
         table_number = table.number if table else "?"
 
-        await self.event_bus.publish(session.group, Event(
-            type="order.item_removed",
-            payload={
-                "table_id": str(order.table_id),
-                "table_number": table_number,
-                "order_id": str(order.id),
-                "item_name": item_name,
-                "order_total": str(order.total()),
-            },
-        ))
+        await self.event_bus.publish(
+            session.group,
+            Event(
+                type="order.item_delivered",
+                payload={
+                    "table_id": str(order.table_id),
+                    "table_number": table_number,
+                    "order_id": str(order_id),
+                    "item_name": item.name,
+                },
+            ),
+        )
 
         return Response(
             id=order.id,

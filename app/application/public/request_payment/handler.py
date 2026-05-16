@@ -1,6 +1,8 @@
+import asyncio
 from datetime import datetime, timezone
 from decimal import Decimal
 from logging import Logger
+from typing import Any, Dict
 from uuid import UUID, uuid4
 
 from app.domain.aggregate.order import OrderStatus
@@ -88,4 +90,47 @@ class Handler:
             ),
         )
 
+        asyncio.create_task(
+            self._repeat_until_confirmed(
+                group=table.group,
+                order_id=order.id,
+                payment_id=payment.id,
+                payload={
+                    "table_id": str(table_id),
+                    "table_number": table.number,
+                    "order_id": str(order.id),
+                    "payment_id": str(payment.id),
+                    "amount": str(amount),
+                    "tip": str(request.tip),
+                    "payment_method": request.payment_method,
+                    "payment_type": request.payment_type,
+                    "customer_name": request.name,
+                },
+            )
+        )
+
         return Response(payment_id=payment.id, amount=amount, status="pending")
+
+    async def _repeat_until_confirmed(
+        self,
+        group: str,
+        order_id: UUID,
+        payment_id: UUID,
+        payload: Dict[str, Any],
+        interval: int = 300,
+        max_repeats: int = 12,
+    ) -> None:
+        for _ in range(max_repeats):
+            await asyncio.sleep(interval)
+            try:
+                order = await self.order_repository.get_by_id(order_id)
+                if not order:
+                    break
+                payment = next((p for p in order.payments if p.id == payment_id), None)
+                if not payment or payment.status != "pending":
+                    break
+                await self.event_bus.publish(group, Event(type="payment.requested", payload=payload))
+                self.logger.info("[repeat] payment.requested for payment %s", payment_id)
+            except Exception as exc:
+                self.logger.error("[repeat] error re-publishing payment event: %s", exc)
+                break

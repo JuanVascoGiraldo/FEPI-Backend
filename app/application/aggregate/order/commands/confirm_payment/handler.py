@@ -39,6 +39,7 @@ class Handler:
             raise PaymentNotFoundException(str(payment_id))
 
         payment.status = "confirmed"
+        order.waiter_id = session.user_id
 
         if payment.payment_type == "items" and payment.dish_ids:
             item_set = set(payment.dish_ids)
