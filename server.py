@@ -5,7 +5,7 @@ from app.logger import configure_logging
 from app.config import get_settings
 from app.application.aggregate import router as aggregate_router
 from app.application.commands import router as commands_router
-from app.application.public import router as public_router
+from app.application.guest import router as public_router
 from app.dependencies import get_dependency
 from app.infrastructure.persistance.mongodb.clients import MongoClient
 from fastapi import FastAPI, APIRouter
