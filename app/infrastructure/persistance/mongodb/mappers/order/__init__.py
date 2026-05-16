@@ -34,6 +34,11 @@ def from_payment_to_dao(payment: Payment) -> PaymentDao:
         amount=payment.amount,
         tip=payment.tip,
         email=payment.email,
+        name=payment.name,
+        fiscal_info=payment.fiscal_info,
+        payment_method=payment.payment_method,
+        payment_type=payment.payment_type,
+        status=payment.status,
         dish_ids=payment.dish_ids,
         created_at=payment.created_at,
     )
@@ -45,6 +50,11 @@ def from_dao_to_payment(dao: PaymentDao) -> Payment:
         amount=dao.amount,
         tip=dao.tip,
         email=dao.email,
+        name=dao.name,
+        fiscal_info=dao.fiscal_info,
+        payment_method=dao.payment_method,
+        payment_type=dao.payment_type,
+        status=dao.status,
         dish_ids=dao.dish_ids,
         created_at=dao.created_at,
     )

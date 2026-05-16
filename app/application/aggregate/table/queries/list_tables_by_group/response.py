@@ -41,7 +41,6 @@ class ActiveOrderResponse(BaseModel):
 class TableResponse(BaseModel):
     id: UUID
     number: str
-    capacity: int
     description: Optional[str] = None
     status: int
     active_order: Optional[ActiveOrderResponse] = None

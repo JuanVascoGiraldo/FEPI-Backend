@@ -24,6 +24,7 @@ from app.infrastructure.persistance.mongodb.dish_repository import DishRepositor
 from app.infrastructure.persistance.mongodb.table_repository import TableRepositoryImpl
 from app.infrastructure.persistance.mongodb.order_repository import OrderRepositoryImpl
 from app.infrastructure.persistance.mongodb.group_repository import GroupRepositoryImpl
+from app.infrastructure.events.event_bus import EventBus
 from app.domain.services import (
     EncryptionService,
     EmailService,
@@ -127,6 +128,9 @@ def build_dependencies(
     container = DependencyContainer()
     container.add_built_dependency(Config, get_settings())
     container.add_built_dependency(Logger, getLogger(__name__))
+    container.add_built_dependency(EventBus, EventBus())
+    
+    
 
     if get_settings().is_test():
         container.add_dependency(MongoClient, MongoTestClient, singleton=True)

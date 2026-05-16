@@ -7,3 +7,4 @@ class OrderItemStatus(IntEnum):
     READY = 3       # ready to be served
     DELIVERED = 4   # delivered to the table
     CANCELLED = 5   # cancelled before preparation
+    PAID = 6        # payment confirmed for this item

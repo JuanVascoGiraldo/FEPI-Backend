@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, computed_field
 from uuid import UUID
 from decimal import Decimal
 from typing import Optional
@@ -7,6 +7,8 @@ from datetime import datetime, timezone
 from .food_category import FoodCategory
 from .dish_status import DishStatus
 from .dish_status_type import DishStatusType
+
+TAX_RATE = Decimal("0.16")
 
 
 class Dish(BaseModel):
@@ -20,6 +22,16 @@ class Dish(BaseModel):
     image_url: Optional[str] = None  # shown on mobile menu for quick identification
     created_at: datetime
     updated_at: datetime
+
+    @computed_field
+    @property
+    def tax(self) -> Decimal:
+        return (self.price * TAX_RATE).quantize(Decimal("0.01"))
+
+    @computed_field
+    @property
+    def total_price(self) -> Decimal:
+        return (self.price + self.tax).quantize(Decimal("0.01"))
 
     def is_available(self) -> bool:
         return self.status.is_available()

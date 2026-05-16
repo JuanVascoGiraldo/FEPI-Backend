@@ -53,7 +53,7 @@ class Order(BaseModel):
         return sum((i.subtotal() for i in self.items), Decimal("0"))
 
     def total_paid(self) -> Decimal:
-        return sum((p.amount for p in self.payments), Decimal("0"))
+        return sum((p.amount for p in self.payments if p.status == "confirmed"), Decimal("0"))
 
     def total_tips(self) -> Decimal:
         return sum((p.tip for p in self.payments), Decimal("0"))

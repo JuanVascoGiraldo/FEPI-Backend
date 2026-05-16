@@ -10,7 +10,6 @@ class Table(BaseModel):
     id: UUID
     group: str  # restaurant identifier this table belongs to
     number: str  # human-readable identifier (e.g. "5", "VIP-1")
-    capacity: int  # max diners; used for seating management
     description: Optional[str] = None  # e.g. "Terrace", "VIP Room"
     status: TableStatus = TableStatus.ACTIVE
     created_at: datetime

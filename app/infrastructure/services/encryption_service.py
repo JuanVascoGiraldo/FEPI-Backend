@@ -3,6 +3,7 @@ import base64
 from cryptography.fernet import Fernet
 from jose import jwt
 from argon2 import PasswordHasher
+from argon2.exceptions import VerifyMismatchError, VerificationError, InvalidHashError
 
 from app.config import Config
 from app.domain.aggregate.auth import SessionContainer
@@ -29,8 +30,10 @@ class EncryptionServiceImpl(EncryptionService):
     def verify(self, text: str, hashed_text: str):
         try:
             match = self.hasher.verify(hashed_text, text)
-        except Exception:
-            match = False
+        except VerifyMismatchError:
+            return [False, False]
+        except (VerificationError, InvalidHashError):
+            raise
         needs_rehash = self.hasher.check_needs_rehash(hashed_text)
         return [match, needs_rehash]
 

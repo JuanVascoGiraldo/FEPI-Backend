@@ -11,9 +11,12 @@ from .dish_not_found import DishNotFoundException
 from .dish_not_available import DishNotAvailableException
 from .table_not_found import TableNotFoundException
 from .order_not_found import OrderNotFoundException
+from .order_already_active import OrderAlreadyActiveException
+from .order_item_not_found import OrderItemNotFoundException
 from .group_not_found import GroupNotFoundException
 from .session_not_valid import SessionIsnotValidException
 from .is_not_authorized import IsNotAuthorizedException
+from .payment_not_found import PaymentNotFoundException
 
 __all__ = [
     "BaseDomainException",
@@ -29,7 +32,10 @@ __all__ = [
     "DishNotAvailableException",
     "TableNotFoundException",
     "OrderNotFoundException",
+    "OrderAlreadyActiveException",
+    "OrderItemNotFoundException",
     "GroupNotFoundException",
     "SessionIsnotValidException",
-    "IsNotAuthorizedException"
+    "IsNotAuthorizedException",
+    "PaymentNotFoundException",
 ]

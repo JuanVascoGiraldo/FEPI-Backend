@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comprobante de pago — TERMI</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;-webkit-font-smoothing:antialiased;">
+
+  <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color:#f1f5f9;">
+    <tr>
+      <td align="center" style="padding:48px 16px;">
+
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" style="max-width:600px;width:100%;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+
+          <!-- HEADER -->
+          <tr>
+            <td style="background-color:#0f172a;padding:32px 40px 28px;">
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="width:42px;height:42px;background-color:#f59e0b;border-radius:11px;text-align:center;vertical-align:middle;">
+                    <span style="font-size:22px;line-height:42px;">&#127859;</span>
+                  </td>
+                  <td style="padding-left:12px;vertical-align:middle;">
+                    <span style="font-size:22px;font-weight:800;color:#ffffff;letter-spacing:-0.5px;">TERMI</span>
+                    <br />
+                    <span style="font-size:11px;font-weight:500;color:#64748b;letter-spacing:0.06em;text-transform:uppercase;">Comprobante de pago</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Accent line -->
+          <tr>
+            <td style="background:linear-gradient(90deg,#f59e0b 0%,#fbbf24 100%);height:3px;font-size:0;line-height:0;">&nbsp;</td>
+          </tr>
+
+          <!-- HERO -->
+          <tr>
+            <td style="background-color:#ffffff;padding:40px 40px 24px;">
+              <h1 style="margin:0 0 6px 0;font-size:26px;font-weight:800;color:#0f172a;line-height:1.2;">
+                ¡Gracias, {{name}}!
+              </h1>
+              <p style="margin:0;font-size:15px;color:#64748b;line-height:1.6;">
+                Tu pago en <strong>Mesa {{table_number}}</strong> ha sido confirmado.
+                Aquí está tu comprobante.
+              </p>
+            </td>
+          </tr>
+
+          <!-- ITEMS TABLE -->
+          <tr>
+            <td style="background-color:#ffffff;padding:0 40px 24px;">
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%"
+                style="border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;">
+                <thead>
+                  <tr style="background-color:#f8fafc;">
+                    <th style="padding:10px 16px;text-align:left;font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.08em;">Platillo</th>
+                    <th style="padding:10px 16px;text-align:center;font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.08em;">Cant.</th>
+                    <th style="padding:10px 16px;text-align:right;font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.08em;">Precio</th>
+                    <th style="padding:10px 16px;text-align:right;font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.08em;">Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{items_rows}}
+                </tbody>
+              </table>
+            </td>
+          </tr>
+
+          <!-- TOTALS -->
+          <tr>
+            <td style="background-color:#ffffff;padding:0 40px 32px;">
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%"
+                style="background-color:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px 24px;">
+                <tr>
+                  <td style="padding:8px 0 0;">
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+
+                      <tr>
+                        <td style="padding:6px 0;font-size:14px;color:#64748b;">Subtotal (sin propina)</td>
+                        <td style="padding:6px 0;font-size:14px;color:#0f172a;font-weight:600;text-align:right;">${{amount}}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding:6px 0;font-size:14px;color:#64748b;">Propina</td>
+                        <td style="padding:6px 0;font-size:14px;color:#0f172a;font-weight:600;text-align:right;">${{tip}}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding:10px 0 6px;border-top:1px solid #e2e8f0;font-size:16px;font-weight:800;color:#0f172a;">Total pagado</td>
+                        <td style="padding:10px 0 6px;border-top:1px solid #e2e8f0;font-size:18px;font-weight:800;color:#f59e0b;text-align:right;">${{total}}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding:6px 0;font-size:13px;color:#64748b;">Método de pago</td>
+                        <td style="padding:6px 0;font-size:13px;color:#0f172a;font-weight:600;text-align:right;">{{payment_method}}</td>
+                      </tr>
+                      {{fiscal_row}}
+
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- NOTE -->
+          <tr>
+            <td style="background-color:#ffffff;padding:0 40px 40px;">
+              <div style="background-color:#fef9ec;border:1px solid #fde68a;border-radius:12px;padding:16px 20px;">
+                <p style="margin:0;font-size:13px;color:#92400e;line-height:1.6;">
+                  Este comprobante es un registro de tu pago en TERMI. Si tienes alguna pregunta,
+                  comunícate con el personal del restaurante.
+                </p>
+              </div>
+            </td>
+          </tr>
+
+          <!-- FOOTER -->
+          <tr>
+            <td style="background-color:#f8fafc;border-top:1px solid #e2e8f0;border-radius:0 0 20px 20px;padding:24px 40px;">
+              <p style="margin:0;font-size:12px;color:#94a3b8;line-height:1.6;">
+                &copy; {{year}} TERMI Restaurant Manager. Todos los derechos reservados.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

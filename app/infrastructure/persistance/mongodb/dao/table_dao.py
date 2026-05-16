@@ -20,7 +20,6 @@ class TableDao(BaseDao):
     id: UUID
     group: str
     number: str
-    capacity: int
     description: str | None = None
     status: int
     created_at: datetime

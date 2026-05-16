@@ -71,7 +71,6 @@ class Handler:
                 TableResponse(
                     id=table.id,
                     number=table.number,
-                    capacity=table.capacity,
                     description=table.description,
                     status=int(table.status),
                     active_order=active_order_response,
