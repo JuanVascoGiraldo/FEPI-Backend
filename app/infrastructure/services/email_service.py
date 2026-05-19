@@ -49,6 +49,33 @@ class EmailServiceImpl(EmailService):
             self._logger.error("Failed to send welcome email to %s: %s", to, exc)
             raise
 
+    async def send_password_reset(
+        self,
+        to: Email,
+        name: str,
+        reset_url: str,
+    ) -> None:
+        html = self._render_service.render(
+            "password_reset.html",
+            {
+                "name": name,
+                "reset_url": reset_url,
+                "year": datetime.now(timezone.utc).year,
+            },
+        )
+        params: resend.Emails.SendParams = {
+            "from": self._from,
+            "to": [str(to)],
+            "subject": "Recuperación de contraseña — TERMI",
+            "html": html,
+        }
+        try:
+            resend.Emails.send(params)
+            self._logger.info("Password reset email sent to %s", to)
+        except Exception as exc:
+            self._logger.error("Failed to send password reset email to %s: %s", to, exc)
+            raise
+
     async def send_receipt(
         self,
         to: str,

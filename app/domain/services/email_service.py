@@ -20,6 +20,16 @@ class EmailService(ABC):
         pass
 
     @abstractmethod
+    async def send_password_reset(
+        self,
+        to: Email,
+        name: str,
+        reset_url: str,
+    ) -> None:
+        """Send a password reset email with a time-limited link."""
+        pass
+
+    @abstractmethod
     async def send_receipt(
         self,
         to: str,
