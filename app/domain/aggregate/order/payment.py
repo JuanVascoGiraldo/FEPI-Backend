@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from uuid import UUID
 from decimal import Decimal
-from typing import List, Optional
+from typing import Dict, List, Optional
 from datetime import datetime
 
 
@@ -16,4 +16,5 @@ class Payment(BaseModel):
     payment_type: str = "amount"   # "amount" | "items"
     status: str = "pending"        # "pending" | "confirmed"
     dish_ids: Optional[List[UUID]] = None
+    item_quantities: Optional[Dict[str, int]] = None  # item_id_str -> qty paid
     created_at: datetime

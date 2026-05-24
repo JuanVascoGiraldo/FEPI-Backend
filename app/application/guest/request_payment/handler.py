@@ -40,7 +40,16 @@ class Handler:
         if not order:
             raise OrderNotFoundException(str(table_id))
 
-        if request.payment_type == "items" and request.item_ids:
+        if request.payment_type == "items" and request.item_quantities:
+            amount = sum(
+                (
+                    i.unit_price * min(request.item_quantities.get(str(i.id), 0), i.quantity)
+                    for i in order.items
+                    if str(i.id) in request.item_quantities
+                ),
+                Decimal("0"),
+            )
+        elif request.payment_type == "items" and request.item_ids:
             item_set = set(request.item_ids)
             amount = sum(
                 (i.subtotal() for i in order.items if i.id in item_set),
@@ -60,6 +69,7 @@ class Handler:
             payment_type=request.payment_type,
             status="pending",
             dish_ids=request.item_ids,
+            item_quantities=request.item_quantities,
             created_at=timestamp,
         )
 

@@ -1,5 +1,5 @@
 from decimal import Decimal
-from typing import List, Optional
+from typing import Dict, List, Optional
 from uuid import UUID
 
 from pydantic import BaseModel, EmailStr
@@ -10,6 +10,7 @@ class Request(BaseModel):
     amount: Optional[Decimal] = None
     tip: Decimal = Decimal("0")
     item_ids: Optional[List[UUID]] = None
+    item_quantities: Optional[Dict[str, int]] = None  # item_id_str -> qty to pay
     payment_method: str        # "cash" | "card"
     name: str
     email: EmailStr

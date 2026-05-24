@@ -1,6 +1,7 @@
 from logging import Logger
-from uuid import UUID
+from uuid import UUID, uuid4
 
+from app.domain.aggregate.order.order_item import OrderItem
 from app.domain.aggregate.order.order_item_status import OrderItemStatus
 from app.domain.aggregate.value_objects.meta import Meta
 from app.domain.exceptions import OrderNotFoundException, PaymentNotFoundException
@@ -41,11 +42,50 @@ class Handler:
         payment.status = "confirmed"
         order.waiter_id = session.user_id
 
-        if payment.payment_type == "items" and payment.dish_ids:
+        receipt_items: list[OrderItem] = []
+
+        if payment.payment_type == "items" and payment.item_quantities:
+            # Build receipt snapshot before mutating quantities
+            for item_id_str, paid_qty in payment.item_quantities.items():
+                item = order.get_item(UUID(item_id_str))
+                if item is None:
+                    continue
+                actual_qty = min(paid_qty, item.quantity)
+                receipt_items.append(item.model_copy(update={"quantity": actual_qty}))
+
+            # Apply partial payment: split items so total() stays consistent
+            new_paid_items: list[OrderItem] = []
+            for item_id_str, paid_qty in payment.item_quantities.items():
+                item = order.get_item(UUID(item_id_str))
+                if item is None:
+                    continue
+                actual_qty = min(paid_qty, item.quantity)
+                if actual_qty >= item.quantity:
+                    item.status = OrderItemStatus.PAID
+                else:
+                    item.quantity -= actual_qty
+                    new_paid_items.append(OrderItem(
+                        id=uuid4(),
+                        dish_id=item.dish_id,
+                        name=item.name,
+                        unit_price=item.unit_price,
+                        quantity=actual_qty,
+                        specifications=item.specifications,
+                        status=OrderItemStatus.PAID,
+                    ))
+            order.items.extend(new_paid_items)
+
+        elif payment.payment_type == "items" and payment.dish_ids:
             item_set = set(payment.dish_ids)
             for item in order.items:
                 if item.id in item_set:
                     item.status = OrderItemStatus.PAID
+            receipt_items = [i for i in order.items if i.id in item_set]
+
+        else:
+            receipt_items = [
+                i for i in order.items if i.status != OrderItemStatus.CANCELLED
+            ]
 
         order.updated_at = timestamp
 
@@ -57,10 +97,7 @@ class Handler:
         table = await self.table_repository.get_by_id(order.table_id)
         table_number = table.number if table else "?"
 
-        if payment.payment_type == "items" and payment.dish_ids:
-            item_set = set(payment.dish_ids)
-            receipt_items = [i for i in order.items if i.id in item_set]
-        else:
+        if not receipt_items:
             receipt_items = [
                 i for i in order.items if i.status != OrderItemStatus.CANCELLED
             ]

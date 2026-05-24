@@ -40,6 +40,7 @@ def from_payment_to_dao(payment: Payment) -> PaymentDao:
         payment_type=payment.payment_type,
         status=payment.status,
         dish_ids=payment.dish_ids,
+        item_quantities=payment.item_quantities,
         created_at=payment.created_at,
     )
 
@@ -56,6 +57,7 @@ def from_dao_to_payment(dao: PaymentDao) -> Payment:
         payment_type=dao.payment_type,
         status=dao.status,
         dish_ids=dao.dish_ids,
+        item_quantities=dao.item_quantities,
         created_at=dao.created_at,
     )
 

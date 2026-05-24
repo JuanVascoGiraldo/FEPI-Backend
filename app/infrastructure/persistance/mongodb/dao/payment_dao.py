@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from decimal import Decimal
-from typing import ClassVar, List, Optional
+from typing import ClassVar, Dict, List, Optional
 from uuid import UUID
 
 from pydantic import EmailStr
@@ -26,6 +26,7 @@ class PaymentDao(BaseDao):
     payment_type: str = "amount"
     status: str = "pending"
     dish_ids: Optional[List[UUID]] = None
+    item_quantities: Optional[Dict[str, int]] = None
     created_at: datetime
 
     def build_pk(self) -> str:
