@@ -6,6 +6,7 @@ from . import order
 from . import table
 from . import dish
 from . import events
+from . import settings
 
 router = APIRouter()
 
@@ -15,3 +16,4 @@ router.include_router(order.router, tags=["orders"])
 router.include_router(table.router, tags=["tables"])
 router.include_router(dish.router, tags=["dishes"])
 router.include_router(events.router, tags=["events"])
+router.include_router(settings.router, tags=["settings"])

@@ -16,6 +16,8 @@ from app.domain.repositories import (
     OrderRepository,
     GroupRepository,
 )
+from app.domain.repositories.settings_repository import SettingsRepository
+from app.infrastructure.persistance.mongodb.settings_repository import SettingsRepositoryImpl
 from app.infrastructure.persistance.mongodb.clients import MongoClient, MongoClientImpl, MongoTestClient
 from app.infrastructure.persistance.mongodb.user_repository import UserRepositoryImpl
 from app.infrastructure.persistance.mongodb.session_repository import SessionRepositoryImpl
@@ -146,6 +148,7 @@ def build_dependencies(
     container.add_dependency(TableRepository, TableRepositoryImpl, singleton=True)
     container.add_dependency(OrderRepository, OrderRepositoryImpl, singleton=True)
     container.add_dependency(GroupRepository, GroupRepositoryImpl, singleton=True)
+    container.add_dependency(SettingsRepository, SettingsRepositoryImpl, singleton=True)
     container.add_dependency(RenderService, RenderServiceImpl, singleton=True)
     container.add_dependency(EmailService, EmailServiceImpl, singleton=True)
     container.add_dependency(CodeGeneratorService, CodeGeneratorServiceImpl, singleton=True)
