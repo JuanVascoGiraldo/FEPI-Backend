@@ -2,7 +2,8 @@ from typing import Optional
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
-from app.dependencies import get_dependency, get_session_meta
+from app.dependencies import get_dependency
+from app.infrastructure.inyections import get_session_meta
 from app.domain.aggregate.value_objects.meta import Meta
 from app.domain.aggregate.settings.group_settings import GroupSettings
 from app.domain.repositories.settings_repository import SettingsRepository
