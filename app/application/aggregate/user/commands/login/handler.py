@@ -4,7 +4,6 @@ from uuid import uuid4
 
 from app.domain.aggregate.auth import Session, SessionContainer
 from app.domain.exceptions.invalid_credentials import InvalidCredentialsException
-from app.domain.exceptions.user_not_found import UserNotFoundException
 from app.domain.repositories.session_repository import SessionRepository
 from app.domain.repositories.user_repository import UserRepository
 from app.domain.services.encryption_service import EncryptionService
@@ -31,7 +30,7 @@ class Handler:
     async def handle(self, request: Request, timestamp: datetime) -> Response:
         user = await self.user_repository.get_by_group_and_email(request.group, request.email)
         if user is None:
-            raise UserNotFoundException("User not found")
+            raise InvalidCredentialsException()
 
         match, needs_rehash = self.encryption_service.verify(
             request.password, user.password_hash
