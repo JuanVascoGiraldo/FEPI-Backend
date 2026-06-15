@@ -34,14 +34,14 @@ class Handler:
             str(request.email).lower(), VerificationType.PASSWORD_RESET
         )
         if verification is None:
-            raise VerificationNotFoundException("No active password reset found for this email")
+            raise VerificationNotFoundException()
 
         if verification.is_expired(timestamp):
             await self.verification_repository.delete(verification.id)
-            raise VerificationExpiredException("Password reset token has expired")
+            raise VerificationExpiredException()
 
         if verification.code != request.token:
-            raise InvalidVerificationCodeException("Invalid reset token")
+            raise InvalidVerificationCodeException()
 
         user = await self.user_repository.get_by_group_and_email(request.group, request.email)
         if user is None:
